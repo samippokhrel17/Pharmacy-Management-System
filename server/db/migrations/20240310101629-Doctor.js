@@ -3,8 +3,8 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Pharmacy", {
-      id: {
+    await queryInterface.createTable("doctor", {
+      doctor_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
@@ -28,16 +28,17 @@ module.exports = {
 
         type: Sequelize.STRING,
       },
-
-      userType: {
+      specilization: {
         allowNull: false,
-        type: Sequelize.ENUM,
-        values: ["superUser", "user"],
-        defaultValue: "user",
+        type: Sequelize.STRING,
+      },
+      contact: {
+        allowNull: false,
+        type: Sequelize.STRING,
       },
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Pharmacy");
+    await queryInterface.dropTable("doctor");
   },
 };

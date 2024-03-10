@@ -1,37 +1,37 @@
 "use strict";
 
+const { DECIMAL } = require("sequelize");
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable("medicine", {
-      medicine_id: {
+      transaction_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      medicine_name: {
+      costomer_id: {
         allowNull: false,
-        type: Sequelize.STRING,
-      },
-      dose_strength: {
-        allowNull: false,
-        type: Sequelize.STRING,
-      },
-      unit_price: {
-        allowNull: false,
-
-        type: Sequelize.DECIMAL,
-      },
-      quantity_available: {
-        allowNull: false,
-
         type: Sequelize.INTEGER,
+        references: {
+          model: "Customers", // referenced table name
+          key: "id", // Primary key in the referenced table
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
-      expiry_date: {
+
+      transaction_date: {
         allowNull: false,
 
         type: Sequelize.DATE,
+      },
+
+      total_amount: {
+        allowNull: true,
+        type: Sequelize.DECIMAL,
       },
     });
   },

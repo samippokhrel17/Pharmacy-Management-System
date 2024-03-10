@@ -12,7 +12,7 @@ dotenv.config();
           host: "localhost",
           user: "root",
           password: "1234",
-          database: "",
+          database: "Pharmacy",
         });
         console.log("MySQL connection pool initialized successfully!");
       }
