@@ -1,6 +1,6 @@
 "use strict";
 const httpStatus = require("http-status");
-const { createPharmasistSql } = require("../sql");
+const { getUserInformationSql } = require("../sql");
 
 (() => {
   module.exports = async (req, res) => {
@@ -10,17 +10,12 @@ const { createPharmasistSql } = require("../sql");
         message: "Data Not found",
       };
 
-      const { firstName, lastName, password, email } = req.body;
-
-      if (!(firstName || lastName || password || email)) {
-        return res.status(404).json({ message: "Fields cannot be empty!" });
-      }
-      //if other logics like jwt token
-
-      let result = await createPharmasistSql(req.body);
+      let result = await getUserInformationSql(req.params);
 
       if (result && result.status == httpStatus.OK) {
-        return res.status(200).json({ message: result.message });
+        return res
+          .status(200)
+          .json({ message: result.message, data: result.data });
       }
 
       if (result && result.status == httpStatus.BAD_REQUEST) {

@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("user", {
+    await queryInterface.createTable("pharmacy_users", {
       user_id: {
         allowNull: false,
         autoIncrement: true,
@@ -28,9 +28,35 @@ module.exports = {
 
         type: Sequelize.STRING,
       },
+      isActive: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN,
+        defaultValue: true,
+      },
+
+      isDeleted: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+      },
+
+      createdDate: {
+        allowNull: true,
+        type: Sequelize.BIGINT,
+      },
+
+      createdBy: {
+        allowNull: true,
+        type: Sequelize.STRING,
+      },
+
+      is_pharmacist: {
+        allowNull: true,
+        type: Sequelize.STRING,
+      },
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("user");
+    await queryInterface.dropTable("pharmacy_users");
   },
 };

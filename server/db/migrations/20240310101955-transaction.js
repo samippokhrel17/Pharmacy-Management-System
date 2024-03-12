@@ -12,20 +12,13 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      costomer_id: {
+      customer_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        references: {
-          model: "Customers", // referenced table name
-          key: "id", // Primary key in the referenced table
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
       },
 
       transaction_date: {
         allowNull: false,
-
         type: Sequelize.DATE,
       },
 

@@ -22,7 +22,7 @@ dotenv.config();
     }
   };
 
-  connection.query = async (query, fields) => {
+  connection.executeQuery = async (query, fields) => {
     try {
       let res = dbClient.query(query, fields);
       dbClient.query("commit");
@@ -33,14 +33,14 @@ dotenv.config();
     }
   };
 
-  // connection.format = (query, args) => {
-  //   try {
-  //     return dbClient.format(query, args);
-  //   } catch (error) {
-  //     console.error({}, "Error>>>>>>>>>>>>>>>>>", error);
-  //     throw error;
-  //   }
-  // };
+  connection.format = (query, args) => {
+    try {
+      return dbClient.format(query, args);
+    } catch (error) {
+      console.error({}, "Error>>>>>>>>>>>>>>>>>", error);
+      throw error;
+    }
+  };
 
   // ... (rest of the functions) ...
 })(module.exports);

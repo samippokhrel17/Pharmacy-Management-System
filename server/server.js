@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
 const app = express();
-const { mysqlConnectionHelper } = require("./helpers");
+const { connection } = require("./helpers");
 
 dotenv.config();
 app.use(
@@ -22,5 +22,6 @@ const mainRoutes = require("./routes/index.js");
 app.use("/api/v1", mainRoutes);
 
 app.listen(PORT, () => {
+  connection.init();
   console.log(`Server is running on ${PORT}`);
 });

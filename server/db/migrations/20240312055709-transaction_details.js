@@ -15,23 +15,11 @@ module.exports = {
       transaction_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        references: {
-          model: "transaction", // referenced table name
-          key: "id", // Primary key in the referenced table
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
       },
 
       medicine_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        references: {
-          model: "medicine", // referenced table name
-          key: "id", // Primary key in the referenced table
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
       },
 
       quanity_sold: {

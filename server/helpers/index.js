@@ -1,4 +1,4 @@
 "use strict";
 module.exports = {
-  mysqlConnectionHelper: require("./database_helper"),
+  connection: require("./database_helper"),
 };
