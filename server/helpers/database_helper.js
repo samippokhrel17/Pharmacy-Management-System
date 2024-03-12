@@ -18,9 +18,7 @@ dotenv.config();
       }
       return dbClient;
     } catch (error) {
-      const newLocal = "Error >>>>>>>>>>>>>.";
-      console.error(newLocal, error);
-      throw error;
+      console.error("Error at databaseHelper connection.init", error);
     }
   };
 
@@ -35,14 +33,14 @@ dotenv.config();
     }
   };
 
-  connection.format = (query, args) => {
-    try {
-      return dbClient.format(query, args);
-    } catch (error) {
-      console.error({}, "Error>>>>>>>>>>>>>>>>>", error);
-      throw error;
-    }
-  };
+  // connection.format = (query, args) => {
+  //   try {
+  //     return dbClient.format(query, args);
+  //   } catch (error) {
+  //     console.error({}, "Error>>>>>>>>>>>>>>>>>", error);
+  //     throw error;
+  //   }
+  // };
 
   // ... (rest of the functions) ...
 })(module.exports);

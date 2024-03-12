@@ -1,11 +1,11 @@
 "use strict";
 const express = require("express");
 const router = express.Router();
-const { registerMedicines } = require("./index");
+const { registerDoctor } = require("./index");
 
 (() => {
   //unboarding customers
-  router.post("/registerMedicine", registerMedicines);
+  router.post("/registerDoctor", registerDoctor);
 
   module.exports = router;
 })();

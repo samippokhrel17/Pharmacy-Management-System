@@ -1,5 +1,5 @@
 "use strict";
 
 module.exports = {
-  createMedcine: require(""),
+  createMedcine: require("./create_medicine_sql"),
 };

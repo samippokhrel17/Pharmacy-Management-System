@@ -1,5 +1,5 @@
 "use strict";
 
 module.exports = {
-  registerPharmesist: require("./../../modules/pharmacist-admin/methods"),
+  registerMedicines: require("./../../modules/medicines/methods/create_medicine_pharmacy"),
 };

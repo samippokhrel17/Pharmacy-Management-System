@@ -3,7 +3,7 @@ const { mysqlConnectionHelper } = require("./../../../helpers");
 const httpStatus = require("http-status");
 const { v4 } = require("uuid");
 (() => {
-  module.exports = async (call, res) => {
+  module.exports = async (req, res) => {
     try {
       // main logic
       let insertObj = {

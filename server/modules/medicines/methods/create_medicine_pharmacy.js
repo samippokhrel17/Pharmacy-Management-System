@@ -1,29 +1,57 @@
 "use strict";
 const httpStatus = require("http-status");
-const { createPharmasist } = require("../sql");
+const { createMedcine } = require("../sql");
 
 (() => {
-  module.exports = async (call, res) => {
+  module.exports = async (req, res) => {
     try {
-      let response = {
-        status: httpStatus.BAD_REQUEST,
-        message: "Data Not found",
-      };
-
-      let result = await createPharmasist(call.body);
-
-      if (result && result.status == httpStatus.OK) {
-        return res.status(200).json({ message: result.message });
+      console.log("Medicine Author Details:", req.body);
+      let {
+        medicine_name,
+        dose_strength,
+        unit_price,
+        quantity_available,
+        expiry_date,
+      } = req.body;
+      if (
+        !medicine_name ||
+        !dose_strength ||
+        !unit_price ||
+        !quantity_available ||
+        !expiry_date
+      ) {
+        return res.status(400).json({ error: "All fields are required" });
       }
-
-      if (result && result.status == httpStatus.BAD_REQUEST) {
-        return res.status(400).json({ message: result.message });
-      }
-
-      return res.status(400).json({ error: response.message });
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: "Internal Server Error" });
+      console.log(error);
+      return res.status(500).json(error);
     }
   };
 })();
+
+// const medicine = async (req, res) => {
+//   try {
+//     console.log("Medicine Author Details:", req.body);
+//     let {
+//       medicine_name,
+//       dose_strength,
+//       unit_price,
+//       quantity_available,
+//       expiry_date,
+//     } = req.body;
+//     if (
+//       !medicine_name ||
+//       !dose_strength ||
+//       !unit_price ||
+//       !quantity_available ||
+//       !expiry_date
+//     ) {
+//       return res.status(400).json({ error: "All fields are required" });
+//     }
+//   } catch (error) {
+//     console.log(error);
+//     return res.status(500).json(error);
+//   }
+// };
+
+// module.exports = { medicine };

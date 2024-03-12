@@ -38,9 +38,13 @@ module.exports = {
         allowNull: true,
         type: Sequelize.INTEGER,
       },
+      total_amount: {
+        allowNull: true,
+        type: Sequelize.DECIMAL,
+      },
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("medicine");
+    await queryInterface.dropTable("transaction_details");
   },
 };
