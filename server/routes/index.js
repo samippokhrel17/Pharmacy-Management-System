@@ -15,8 +15,8 @@ router.use("/customer", customer);
 const doctor = require("./doctor/routes");
 router.use("/doctor", doctor);
 
-// const transaction = require("./transaction/routes");
-// router.use("/transaction", transaction);
+const transaction = require("./transaction/routes");
+router.use("/transaction", transaction);
 
 // const transactionDetails = require("./transactionDetails/routes");
 // router.use("/transactionDetails", transactionDetails);

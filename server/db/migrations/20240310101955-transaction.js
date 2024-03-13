@@ -13,12 +13,12 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       customer_id: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.INTEGER,
       },
 
       transaction_date: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.DATE,
       },
 

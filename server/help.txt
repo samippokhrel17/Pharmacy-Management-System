@@ -11,15 +11,11 @@ const httpStatus = require("http-status");
       };
 
       let insertObject = {
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        password: password,
-        specilization: expiry_date,
-        contact: contact,
+        transaction_date: transaction_date,
+        total_amount: total_amount,
       };
 
-      let query = sqlString.format(`INSERT INTO Pharmacy.doctor SET ?`, [
+      let query = sqlString.format(`INSERT INTO Pharmacy.transaction SET ?`, [
         insertObject,
       ]);
 
