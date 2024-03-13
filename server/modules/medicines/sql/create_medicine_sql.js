@@ -1,7 +1,7 @@
 "use strict";
-const { mysqlConnectionHelper } = require("../../../helpers");
+const { connection } = require("../../../helpers");
 const httpStatus = require("http-status");
-const { v4 } = require("uuid");
+
 (() => {
   module.exports = async (req, res) => {
     try {
@@ -10,28 +10,38 @@ const { v4 } = require("uuid");
         message: "Data Not found",
       };
 
-      let insertObject = {
-        medicine_name: medicine_name,
-        dose_strength: dose_strength,
-        unit_price: unit_price,
-        quantity_available: quantity_available,
-        expiry_date: expiry_date,
+      let insertObj = {
+        medicine_name: req.medicine_name,
+        dose_strength: req.dose_strength,
+        unit_price: req.unit_price,
+        quantity_available: req.quantity_available,
+        expiry_date: req.expiry_date
+          ? req.expiry_date
+          : new Date(Date.now() + 3 * 30 * 24 * 60 * 60 * 1000),
       };
 
-      let query = sqlString.format(`INSERT INTO Pharmacy.medicine SET ?`, [
-        insertObject,
-      ]);
+      let query = await connection.format(
+        `INSERT IGNORE INTO Pharmacy.medicine set ? `,
+        [insertObj]
+      );
+      const [result] = await connection.executeQuery(query);
 
-      let result = await executeQuery(query);
-      console.log("Database operation result:", result);
-
-      if (result.affectedRows > 0) {
-        return res.status(200).send("Medicine Data Saved Successfully");
+      if (result && result.warningStatus > 0) {
+        return (response = {
+          status: httpStatus.BAD_REQUEST,
+          message: "Duplicate Data entry!",
+        });
       }
-      return res.status(200).send("Successfully inserted");
+
+      if (result && result.affectedRows > 0) {
+        return (response = {
+          status: httpStatus.OK,
+          message: "Registered successfully!",
+        });
+      }
     } catch (error) {
-      console.log(error);
-      return res.status(500).json(error);
+      console.error(error);
+      return res.status(500).json({ error: "Internal Server Error" }); // Use 'return' to exit the function
     }
   };
 })();

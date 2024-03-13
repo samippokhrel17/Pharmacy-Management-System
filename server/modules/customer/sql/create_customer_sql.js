@@ -1,5 +1,5 @@
 "use strict";
-const { mysqlConnectionHelper } = require("../../../helpers");
+const { connection } = require("../../../helpers");
 const httpStatus = require("http-status");
 
 (() => {
@@ -10,26 +10,34 @@ const httpStatus = require("http-status");
         message: "Data Not found",
       };
 
-      let insertObject = {
-        firstName: firstName,
-        lastName: lastName,
-        contact: contact,
+      let insertObj = {
+        firstName: req.firstName,
+        lastName: req.lastName,
+        contact: req.contact,
       };
 
-      let query = sqlString.format(`INSERT INTO Pharmacy.customer SET ?`, [
-        insertObject,
-      ]);
+      let query = await connection.format(
+        `INSERT IGNORE INTO Pharmacy.customer set ? `,
+        [insertObj]
+      );
+      const [result] = await connection.executeQuery(query);
 
-      let result = await executeQuery(query);
-      console.log("Database operation result:", result);
-
-      if (result.affectedRows > 0) {
-        return res.status(200).send("Customer Data Saved Successfully");
+      if (result && result.warningStatus > 0) {
+        return (response = {
+          status: httpStatus.BAD_REQUEST,
+          message: "Duplicate Data entry!",
+        });
       }
-      return res.status(200).send("Successfully inserted");
+
+      if (result && result.affectedRows > 0) {
+        return (response = {
+          status: httpStatus.OK,
+          message: " Customer Registered successfully!",
+        });
+      }
     } catch (error) {
-      console.log(error);
-      return res.status(500).json(error);
+      console.error(error);
+      return res.status(500).json({ error: "Internal Server Error" }); // Use 'return' to exit the function
     }
   };
 })();
