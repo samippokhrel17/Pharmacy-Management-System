@@ -1,6 +1,6 @@
 "use strict";
 const httpStatus = require("http-status");
-const { loginUserSql } = require("../sql");
+const { loginDoctorSql } = require("../sql");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const dotenv = require("dotenv");
@@ -24,7 +24,7 @@ module.exports = async (req, res) => {
     if (!email || !password)
       return res.status(400).json("Email and password are required");
 
-    const user = await loginUserSql(email);
+    const user = await loginDoctorSql(email);
 
     if (!user) {
       return res.status(404).json("User not found");

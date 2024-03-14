@@ -10,30 +10,26 @@ const httpStatus = require("http-status");
         message: "Data Not found",
       };
 
-      let insertObj = {
-        firstName: req.firstName,
-        lastName: req.lastName,
-        contact: req.contact,
-        // medicine_approved: req.medicine_approved,
-      };
-
       let query = await connection.format(
-        `INSERT IGNORE INTO Pharmacy.customer set ? `,
-        [insertObj]
+        ` 
+        SELECT 
+    customer_id,
+    firstName,
+    lastName,
+    contact,
+    medicine_approved
+
+FROM
+    Pharmacy.customer where customer_id = "${req.id}"
+`
       );
       const [result] = await connection.executeQuery(query);
 
-      if (result && result.warningStatus > 0) {
-        return (response = {
-          status: httpStatus.BAD_REQUEST,
-          message: "Duplicate Data entry!",
-        });
-      }
-
-      if (result && result.affectedRows > 0) {
+      if (result && result.length > 0) {
         return (response = {
           status: httpStatus.OK,
-          message: " Customer Registered successfully!",
+          message: "Customer Data fetch succesfully!!",
+          data: result[0],
         });
       }
     } catch (error) {

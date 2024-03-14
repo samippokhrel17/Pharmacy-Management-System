@@ -29,6 +29,7 @@ const hashHelper = require("./../helpers/hashHelper");
         createdDate: new Date().getTime(),
         createdBy: "samip",
         is_pharmacist: 0,
+        is_doctor: 0,
       };
 
       let query = await connection.format(
@@ -37,17 +38,15 @@ const hashHelper = require("./../helpers/hashHelper");
       );
       const [result] = await connection.executeQuery(query);
 
-      if (result && result.warningStatus > 0) {
-        return (response = {
-          status: httpStatus.BAD_REQUEST,
-          message: "Duplicate Data entry!",
-        });
-      }
-
       if (result && result.affectedRows > 0) {
         return (response = {
           status: httpStatus.OK,
           message: "Registered successfully!",
+        });
+      } else {
+        return (response = {
+          status: httpStatus.BAD_REQUEST,
+          message: "Could Not register Data as email already exists",
         });
       }
     } catch (error) {

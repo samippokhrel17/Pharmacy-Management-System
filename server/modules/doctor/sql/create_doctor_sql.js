@@ -1,6 +1,7 @@
 "use strict";
 const { connection } = require("../../../helpers");
 const httpStatus = require("http-status");
+const hashHelper = require("./../helper/hashHelper");
 
 (() => {
   module.exports = async (req, res) => {
@@ -10,11 +11,18 @@ const httpStatus = require("http-status");
         message: "Data Not found",
       };
 
+      let generateSalt = await hashHelper.generateSalt();
+
+      let hashPassword = await hashHelper.hashPassword(
+        req.password,
+        generateSalt
+      );
+
       let insertObj = {
         firstName: req.firstName,
         lastName: req.lastName,
         email: req.email,
-        password: req.password,
+        password: hashPassword,
         specilization: req.specilization,
         contact: req.contact,
       };
