@@ -1,24 +1,28 @@
 const jwt = require("jsonwebtoken");
-
 const dotenv = require("dotenv");
 
 dotenv.config({});
 
 function authenticate(req, res, next) {
-  const token = extractTokenFromHeader(req.headers["authorization"]);
-
-  if (!token) {
-    return sendErrorResponse(res, 400, "Token Error");
-  }
-
-  jwt.verify(token, JWT_SECRET_KEY, (err, user) => {
-    if (err) {
-      return sendUnauthorizedResponse(res, "Token authentication required");
+  try {
+    let token = req.headers.authorization;
+    if (!token) {
+      console.error("token not found in the request headers");
+      return res.status(401).json({ error: "Token is missing" });
     }
-
-    req.user = user;
+    let decoded = jwt.verify(
+      token,
+      process.env.ACCESS_TOKEN_SECRET || "aaabbb111222"
+    );
+    if (!decoded) {
+      console.error("Failed to decode the token.");
+      return res.status(401).json({ error: "Failed to decode the token" });
+    }
     next();
-  });
+  } catch (error) {
+    console.error("Error while verifying token:", error.message);
+    return res.status(401).json({ error: "Token verification failed" });
+  }
 }
 
 module.exports = authenticate;

@@ -3,9 +3,8 @@ const httpStatus = require("http-status");
 const { loginDoctorSql } = require("../sql");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const dotenv = require("dotenv");
-
-dotenv.config({});
+const path = require("path");
+require("dotenv").config({ path: path.resolve(__dirname, "./../../../.env") });
 
 const generateTokens = (userId) => {
   const accessToken = jwt.sign({ userId }, process.env.ACCESS_TOKEN_SECRET, {

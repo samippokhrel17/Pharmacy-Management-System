@@ -5,6 +5,7 @@ const {
   registerPhamesist,
   getUserInformation,
   loginUserSql,
+  updateUser,
 } = require("./index");
 
 (() => {
@@ -12,6 +13,7 @@ const {
   router.post("/register", registerPhamesist);
   router.get("/get-user-info/:id", getUserInformation);
   router.post("/loginPharmasist", loginUserSql);
+  router.put("/updateUser", updateUser);
 
   module.exports = router;
 })();

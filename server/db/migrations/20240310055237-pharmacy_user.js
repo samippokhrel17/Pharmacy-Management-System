@@ -42,7 +42,7 @@ module.exports = {
 
       createdDate: {
         allowNull: true,
-        type: Sequelize.DATE,
+        type: Sequelize.BIGINT,
       },
 
       createdBy: {
@@ -55,6 +55,10 @@ module.exports = {
         type: Sequelize.STRING,
       },
       is_doctor: {
+        allowNull: true,
+        type: Sequelize.STRING,
+      },
+      is_admin: {
         allowNull: true,
         type: Sequelize.STRING,
       },
