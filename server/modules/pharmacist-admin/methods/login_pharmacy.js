@@ -9,14 +9,14 @@ dotenv.config({});
 
 const generateTokens = (userId) => {
   const accessToken = jwt.sign(
-    { userId, is_admin, is_pharmacist, is_doctor },
+    { userId }, // is_admin, is_pharmacist, is_doctor
     process.env.ACCESS_TOKEN_SECRET,
     {
       expiresIn: "55m",
     }
   );
   const refreshToken = jwt.sign(
-    { userId, is_admin, is_pharmacist, is_doctor },
+    { userId }, //, is_admin, is_pharmacist, is_doctor
     process.env.REFRESH_TOKEN_SECRET,
     {
       expiresIn: "7d",
