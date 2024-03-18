@@ -10,17 +10,17 @@ const { updatePharmacistSql } = require("../sql");
         message: "Data not found",
       };
 
-      const { userId, isDoctor, isAdmin } = req.body;
+      const { userId, isDoctor, isPharmacist } = req.body;
 
       if (
         !userId ||
         typeof isDoctor !== "boolean" ||
-        typeof isAdmin !== "boolean"
+        typeof isPharmacist !== "boolean"
       ) {
         return res.status(400).json({ message: "Invalid request data" });
       }
 
-      let result = await updatePharmacistSql(userId, isDoctor, isAdmin);
+      let result = await updatePharmacistSql(userId, isDoctor, isPharmacist);
 
       if (result && result.status === httpStatus.OK) {
         return res.status(httpStatus.OK).json({ message: result.message });

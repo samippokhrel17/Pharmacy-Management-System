@@ -16,7 +16,14 @@ module.exports = {
         allowNull: true,
         type: Sequelize.INTEGER,
       },
-
+      medicine_id: {
+        allowNull: true,
+        type: Sequelize.INTEGER,
+      },
+      quanity_sold: {
+        allowNull: true,
+        type: Sequelize.INTEGER,
+      },
       transaction_date: {
         allowNull: true,
         type: Sequelize.DATE,

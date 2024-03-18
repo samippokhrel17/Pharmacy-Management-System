@@ -2,7 +2,7 @@
 const { connection } = require("../../../helpers");
 const httpStatus = require("http-status");
 
-module.exports = async (userId, isDoctor, isAdmin) => {
+module.exports = async (userId, isDoctor, isPharmacist) => {
   try {
     let response = {
       status: httpStatus.BAD_REQUEST,
@@ -10,12 +10,12 @@ module.exports = async (userId, isDoctor, isAdmin) => {
     };
 
     let query = `UPDATE Pharmacy.pharmacy_users 
-                 SET is_doctor = ?, is_admin = ? 
+                 SET is_doctor = ?, is_pharmacist = ? 
                  WHERE user_id = ?`;
 
     const [result] = await connection.executeQuery(query, [
       isDoctor,
-      isAdmin,
+      isPharmacist,
       userId,
     ]);
 

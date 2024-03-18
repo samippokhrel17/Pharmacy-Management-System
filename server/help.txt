@@ -1,34 +1,91 @@
 "use strict";
-const { mysqlConnectionHelper } = require("../../../helpers");
+const { connection } = require("../../../helpers");
 const httpStatus = require("http-status");
 
-(() => {
-  module.exports = async (req, res) => {
-    try {
-      let response = {
+module.exports = async (req, res) => {
+  try {
+    let response = {
+      status: httpStatus.BAD_REQUEST,
+      message: "Data Not found",
+    };
+
+    let insertObj = {
+      medicine_name: req.medicine_name,
+      dose_strength: req.dose_strength,
+      unit_price: req.unit_price,
+      quantity_available: req.quantity_available,
+      expiry_date: req.expiry_date
+        ? req.expiry_date
+        : new Date(Date.now() + 3 * 30 * 24 * 60 * 60 * 1000),
+    };
+
+    let query = await connection.format(
+      `
+      INSERT IGNORE INTO Pharmacy.medicine 
+      SET ?, 
+          priority = (
+              SELECT COUNT(*) + 1 
+              FROM (
+                  SELECT *
+                  FROM Pharmacy.medicine
+              ) AS temp
+              WHERE expiry_date < ? OR (expiry_date = ? AND medicine_id < ?)
+          )
+      `,
+      [
+        insertObj,
+        insertObj.expiry_date,
+        insertObj.expiry_date,
+        insertObj.medicine_id || 0,
+      ]
+    );
+
+    const [result] = await connection.executeQuery(query);
+
+    if (result && result.warningStatus > 0) {
+      return (response = {
         status: httpStatus.BAD_REQUEST,
-        message: "Data Not found",
-      };
-
-      let insertObject = {
-        transaction_date: transaction_date,
-        total_amount: total_amount,
-      };
-
-      let query = sqlString.format(`INSERT INTO Pharmacy.transaction SET ?`, [
-        insertObject,
-      ]);
-
-      let result = await executeQuery(query);
-      console.log("Database operation result:", result);
-
-      if (result.affectedRows > 0) {
-        return res.status(200).send("Doctor Data Saved Successfully");
-      }
-      return res.status(200).send("Successfully inserted");
-    } catch (error) {
-      console.log(error);
-      return res.status(500).json(error);
+        message: "Duplicate Data entry!",
+      });
     }
-  };
-})();
+
+    if (result && result.affectedRows > 0) {
+      // Update priorities of existing medicines
+      await updateMedicinePriorities(insertObj.expiry_date);
+      
+      return (response = {
+        status: httpStatus.OK,
+        message: "Registered successfully!",
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal Server Error" }); // Use 'return' to exit the function
+  }
+};
+
+async function updateMedicinePriorities(newExpiryDate) {
+  try {
+    // Update priorities of existing medicines based on their expiry dates relative to the new medicine's expiry date
+    const updateQuery = `
+      UPDATE Pharmacy.medicine AS m
+      JOIN (
+        SELECT 
+          medicine_id,
+          @priority := IF(@prev_expiry_date = expiry_date, @priority, @priority + 1) AS new_priority,
+          @prev_expiry_date := expiry_date
+        FROM 
+          (SELECT @priority := 0, @prev_expiry_date := NULL) AS vars,
+          Pharmacy.medicine
+        ORDER BY expiry_date ASC, medicine_id ASC
+      ) AS ranked ON m.medicine_id = ranked.medicine_id
+      SET m.priority = ranked.new_priority
+      WHERE m.expiry_date <= ?;
+    `;
+    
+    await connection.executeQuery(updateQuery, [newExpiryDate]);
+  } catch (error) {
+    console.error("Error updating medicine priorities:", error);
+    throw error;
+  }
+}
