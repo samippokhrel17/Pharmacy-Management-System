@@ -7,6 +7,7 @@ const {
   referMedicine,
   suggestDoctor,
   getSuggestionPharmacy,
+  soldMedicineCustomer,
 } = require("./index");
 const authenticate = require("./../../modules/middleware/authentiacate");
 
@@ -20,6 +21,7 @@ const authenticate = require("./../../modules/middleware/authentiacate");
 
   router.post("/suggest-medicine", suggestDoctor);
   router.get("/get-suggestion/:mobileNumber", getSuggestionPharmacy);
+  router.post("/sell-medicine", soldMedicineCustomer);
 
   module.exports = router;
 })();

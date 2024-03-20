@@ -6,4 +6,5 @@ module.exports = {
   referMedicine: require("../../modules/customer/methods/update_customer"),
   suggestDoctor: require("./../../modules/doctor/methods/suggest_medicine_customer"),
   getSuggestionPharmacy: require("./../../modules/doctor/methods/get_suggestion_list_pharmacy"),
+  soldMedicineCustomer: require("./../../modules/doctor/methods/sold_medicine_customer"),
 };
