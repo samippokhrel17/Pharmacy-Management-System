@@ -3,37 +3,37 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("customer", {
-      customer_id: {
+    await queryInterface.createTable("doctor_suggestions", {
+      id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      firstName: {
-        allowNull: false,
-        type: Sequelize.STRING,
-      },
-      lastName: {
-        allowNull: false,
-        type: Sequelize.STRING,
-      },
 
-      contact: {
+      medicine_name: {
         allowNull: false,
         type: Sequelize.STRING,
       },
-      approved_medicine: {
+      mobile_number: {
+        allowNull: false,
+        type: Sequelize.STRING,
+      },
+      approve_date: {
         allowNull: true,
-        type: Sequelize.JSON,
+        type: Sequelize.BIGINT,
+      },
+      doctor_id: {
+        allowNull: true,
+        type: Sequelize.INTEGER,
       },
       quantity_given: {
         allowNull: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
       },
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("customer");
+    await queryInterface.dropTable("doctor_suggestions");
   },
 };

@@ -17,7 +17,8 @@ const httpStatus = require("http-status");
     firstName,
     lastName,
     contact,
-    medicine_approved
+    approved_medicine,
+    quantity_given
 
 FROM
     Pharmacy.customer where customer_id = "${req.id}"

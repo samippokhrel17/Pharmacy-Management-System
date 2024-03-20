@@ -2,26 +2,41 @@
 // const { connection } = require("../../../helpers");
 // const httpStatus = require("http-status");
 
-// module.exports = async (userId, medicine_approved) => {
+// module.exports = async (userId, medicine, quantityGiven) => {
 //   try {
 //     let response = {
 //       status: httpStatus.BAD_REQUEST,
 //       message: "Data not found",
 //     };
 
+//     // Fetch all data from the medicine table
+//     const queryMedicine = `SELECT medicine_name, dose_strength,expiry_date FROM medicine where medicine_id=${medicine}`;
+//     const [medicines] = await connection.executeQuery(queryMedicine);
+
+//     if (medicines.length < 0) {
+//       return {
+//         status: httpStatus.BAD_REQUEST,
+//         message: "Could not find medicine",
+//       };
+//     }
+//     // Convert fetched data into appropriate format (e.g., JSON string)
+//     const medicineData = JSON.stringify(medicines);
+
 //     let query = `UPDATE Pharmacy.customer
-//                  SET medicine_approved = ?
+//                  SET approved_medicine = ?,
+//                  quantity_given = ?
 //                  WHERE customer_id = ?`;
 
 //     const [result] = await connection.executeQuery(query, [
-//       medicine_approved,
+//       medicineData,
+//       quantityGiven,
 //       userId,
 //     ]);
 
 //     if (result && result.affectedRows > 0) {
 //       return {
 //         status: httpStatus.OK,
-//         message: "Customer Medicine Approved  successfully",
+//         message: "Customer Medicine Approved successfully",
 //       };
 //     } else {
 //       return {
@@ -42,26 +57,40 @@
 const { connection } = require("../../../helpers");
 const httpStatus = require("http-status");
 
-module.exports = async (userId) => {
+module.exports = async (userId, medicineName, quantityGiven) => {
   try {
     let response = {
       status: httpStatus.BAD_REQUEST,
       message: "Data not found",
     };
 
-    // Fetch all data from the medicine table
-    const queryMedicine = `SELECT * FROM medicine`;
+    // Fetch medicine data from the medicine table
+    const queryMedicine = `
+      SELECT medicine_id, medicine_name, dose_strength, expiry_date 
+      FROM medicine 
+      WHERE medicine_name = '${medicineName}'
+      ORDER BY expiry_date ASC
+      LIMIT 1
+    `;
     const [medicines] = await connection.executeQuery(queryMedicine);
 
-    // Convert fetched data into appropriate format (e.g., JSON string)
-    const medicineData = JSON.stringify(medicines);
+    if (medicines.length === 0) {
+      return {
+        status: httpStatus.BAD_REQUEST,
+        message: "Could not find medicine",
+      };
+    }
+
+    const medicineData = JSON.stringify(medicines[0]);
 
     let query = `UPDATE Pharmacy.customer 
-                 SET medicine_approved = ?
+                 SET approved_medicine = ?,
+                 quantity_given = ?
                  WHERE customer_id = ?`;
 
     const [result] = await connection.executeQuery(query, [
       medicineData,
+      quantityGiven,
       userId,
     ]);
 

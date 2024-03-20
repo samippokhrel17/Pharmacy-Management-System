@@ -16,7 +16,7 @@ const httpStatus = require("http-status");
         unit_price: req.unit_price,
         quantity_available: req.quantity_available,
         expiry_date: req.expiry_date
-          ? req.expiry_date
+          ? new Date(req.expiry_date)
           : new Date(Date.now() + 3 * 30 * 24 * 60 * 60 * 1000),
       };
 

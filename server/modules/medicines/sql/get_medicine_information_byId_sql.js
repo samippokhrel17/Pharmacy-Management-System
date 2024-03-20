@@ -18,8 +18,7 @@ const httpStatus = require("http-status");
     dose_strength,
     unit_price,
     quantity_available,
-    expiry_date,
-    priority
+    expiry_date
 
 FROM
     Pharmacy.medicine where medicine_id = "${req.id}"

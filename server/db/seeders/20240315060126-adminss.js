@@ -8,7 +8,7 @@ module.exports = {
         user_id: 1,
         firstName: "Samip",
         lastName: "Pokhrel",
-        email: "samippokhrel@yopmail.com",
+        email: "samippokhrel@gmail.com",
         password:
           "$2b$05$LxvsJSgp/exgm5buGLQbIO7KXhFHYCFZ1BdiH0REYwBybEIcWmD2K", //Nepal@12345
         isActive: true,
