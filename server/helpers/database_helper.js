@@ -22,6 +22,7 @@ dotenv.config();
     }
   };
 
+  // Defining a method 'executeQuery' to execute SQL queries
   connection.executeQuery = async (query, fields) => {
     try {
       let res = dbClient.query(query, fields);
@@ -32,7 +33,7 @@ dotenv.config();
       throw error;
     }
   };
-
+  // format is used to safely format SQL queries with arguments.
   connection.format = (query, args) => {
     try {
       return dbClient.format(query, args);
@@ -41,6 +42,4 @@ dotenv.config();
       throw error;
     }
   };
-
-  // ... (rest of the functions) ...
 })(module.exports);

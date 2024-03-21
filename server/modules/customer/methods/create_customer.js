@@ -16,9 +16,10 @@ const { createCustomer } = require("../sql");
         return res.status(404).json({ message: "Fields cannot be empty!" });
       }
       //if other logics like jwt token
-
+      // Calling the createCustomer function with the request body
       let result = await createCustomer(req.body);
 
+      // Handling different outcomes based on the result status
       if (result && result.status == httpStatus.OK) {
         return res.status(200).json({ message: result.message });
       }

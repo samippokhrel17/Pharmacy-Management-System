@@ -1,49 +1,40 @@
-module.exports = async (req, res) => {
-  try {
-    let response = {
-      status: httpStatus.BAD_REQUEST,
-      message: "Data Not found",
-    };
+"use strict"; // Enforces strict mode for better error handling
 
-    // Extracting request data
-    const { medicine_name, dose_strength, unit_price, quantity_available, expiry_date } = req.body;
+const httpStatus = require("http-status"); // Importing the http-status library
+const { createCustomer } = require("../sql"); // Importing the createCustomer function from a file named "sql" located in the parent directory
 
-    // Parse expiry_date into correct format for DATEONLY column
-    const parsedExpiryDate = expiry_date ? new Date(expiry_date) : null;
+(() => { // Immediately Invoked Function Expression (IIFE) for encapsulation
+  module.exports = async (req, res) => { // Exporting an asynchronous function that takes request and response objects as parameters
+    try {
+      let response = { // Initializing a response object
+        status: httpStatus.BAD_REQUEST, // Setting default status to BAD_REQUEST
+        message: "Data Not found", // Default message
+      };
 
-    let insertObj = {
-      medicine_name,
-      dose_strength,
-      unit_price,
-      quantity_available,
-      expiry_date: parsedExpiryDate, // Use parsedExpiryDate
-    };
+      const { firstName, lastName, contact } = req.body; // Destructuring request body to extract firstName, lastName, and contact
 
-    let query = await connection.format(
-      `
-      INSERT IGNORE INTO Pharmacy.medicine
-      SET ?
-      `,
-      [insertObj]
-    );
+      // Checking if any of the required fields are missing
+      if (!(firstName || lastName || contact)) {
+        return res.status(404).json({ message: "Fields cannot be empty!" }); // Returning a 404 status with an error message if any required field is missing
+      }
+      //if other logics like jwt token
 
-    const [result] = await connection.executeQuery(query);
+      // Calling the createCustomer function with the request body
+      let result = await createCustomer(req.body);
 
-    if (result && result.warningStatus > 0) {
-      return (response = {
-        status: httpStatus.BAD_REQUEST,
-        message: "Duplicate Data entry!",
-      });
+      // Handling different outcomes based on the result status
+      if (result && result.status == httpStatus.OK) {
+        return res.status(200).json({ message: result.message }); // Returning a success message if createCustomer operation is successful
+      }
+
+      if (result && result.status == httpStatus.BAD_REQUEST) {
+        return res.status(400).json({ message: "Bad request" }); // Returning a 400 status with an error message if createCustomer operation fails due to bad request
+      }
+
+      return res.status(400).json({ error: response.message }); // Returning a generic error message if no specific error condition is met
+    } catch (error) {
+      console.error(error); // Logging any caught errors
+      res.status(500).json({ error: "Internal Server Error" }); // Returning a 500 status with an error message for internal server errors
     }
-
-    if (result && result.affectedRows > 0) {
-      return (response = {
-        status: httpStatus.OK,
-        message: "Registered successfully!",
-      });
-    }
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Internal Server Error" });
-  }
-};
+  };
+})();

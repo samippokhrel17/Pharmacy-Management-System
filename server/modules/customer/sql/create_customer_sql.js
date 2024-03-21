@@ -14,7 +14,6 @@ const httpStatus = require("http-status");
         firstName: req.firstName,
         lastName: req.lastName,
         contact: req.contact,
-        // medicine_approved: req.medicine_approved,
       };
 
       let query = await connection.format(

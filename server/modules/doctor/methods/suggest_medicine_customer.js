@@ -11,10 +11,12 @@ const mysqlHelper = require("./../../../helpers/database_helper");
         message: "Data Not found",
       };
 
-      const { customerFullName, mobileNumber, doctorName } = req.body;
+      const { medicineName, mobileNumber, doctorId, quantityGiven } = req.body;
 
-      if (!(customerFullName || mobileNumber || doctorName)) {
-        return res.status(404).json({ message: "Fields cannot be empty!" });
+      if (!medicineName || !mobileNumber || !doctorId || !quantityGiven) {
+        return res
+          .status(400)
+          .json({ message: "Required fields cannot be empty!" });
       }
 
       let validateQuery = await mysqlHelper.format(
