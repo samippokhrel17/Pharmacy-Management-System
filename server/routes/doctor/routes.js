@@ -20,8 +20,12 @@ const authenticate = require("./../../modules/middleware/authentiacate");
   //enhance part
 
   router.post("/suggest-medicine", suggestDoctor);
-  router.get("/get-suggestion/:mobileNumber", getSuggestionPharmacy);
-  router.post("/sell-medicine", soldMedicineCustomer);
+  router.get(
+    "/get-suggestion/:mobileNumber",
+    authenticate,
+    getSuggestionPharmacy
+  );
+  router.post("/sell-medicine", authenticate, soldMedicineCustomer);
 
   module.exports = router;
 })();

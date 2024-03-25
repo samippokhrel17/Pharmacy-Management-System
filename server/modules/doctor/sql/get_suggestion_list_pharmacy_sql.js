@@ -11,6 +11,7 @@ const hashHelper = require("./../helper/hashHelper");
         message: "Data Not found",
       };
 
+      // Constructs a SQL query to fetch data from the database
       let query = await connection.format(` 
   SELECT DISTINCT
     CONCAT(cu.firstName, ' ', cu.lastName) AS customerName,
@@ -30,14 +31,18 @@ WHERE
 
 
    `);
+
+      // Executes the constructed query and retrieves the result
       let [result] = await connection.executeQuery(query);
+
+      // Checks if the query returned no results
       if (result && result.length <= 0) {
         return (response = {
           status: httpStatus.BAD_REQUEST,
           message: "customer doesnot exist!!!",
         });
       }
-
+      // additional data based on above query result(medicine details to be sold)
       const queryMedicine = `
   SELECT 
     m.medicine_id,
@@ -49,26 +54,30 @@ FROM
     Pharmacy.doctor_suggestions AS p
         INNER JOIN
     Pharmacy.medicine AS m ON m.medicine_name= p.medicine_name
-    where p.mobile_number = "${result[0].mobile_number}"`;
+    where p.mobile_number = "${result[0].mobile_number}"`; // Filters the results to only include rows where the mobile number in the doctor_suggestions table matches the mobile number fetched from the previous query result
 
       let [resultQuery] = await connection.executeQuery(queryMedicine);
+
+      //  fetched medicine data to group and sort items
+      //reduce() method to iterate over the fetched medicine data (resultQuery) and group items based on their medicine_name.
       const groupedItems = resultQuery.reduce((groups, item) => {
         const groupName = item.medicine_name;
         if (!groups[groupName]) {
           groups[groupName] = [];
         }
-        groups[groupName].push(item);
+        groups[groupName].push(item); //add the current item to the array representing the group of items associated with the current medicine name.
         return groups;
       }, {});
-
+      // Sorts the grouped items by expiry date(JK dai twist)
       for (const groupName in groupedItems) {
         groupedItems[groupName].sort(
           (a, b) => new Date(a.expiry_date) - new Date(b.expiry_date)
         );
       }
-
+      // get only first item from each group
       const sortedItems = Object.values(groupedItems).map((group) => group[0]);
 
+      //send that sorted shorted medicine data to main result
       result[0].medicine_name = sortedItems;
 
       if (result && result.length > 0) {

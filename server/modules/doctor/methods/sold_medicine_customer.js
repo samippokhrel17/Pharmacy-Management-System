@@ -10,6 +10,12 @@ const { soldMedicineCustomer } = require("../sql");
         message: "Data Not found",
       };
 
+      const { mobileNumber, medcineId } = req.body;
+
+      if (!(mobileNumber || medcineId)) {
+        return res.status(404).json({ message: "Fields cannot be empty!" });
+      }
+
       let result = await soldMedicineCustomer(req.body);
 
       if (result && result.status == httpStatus.OK) {

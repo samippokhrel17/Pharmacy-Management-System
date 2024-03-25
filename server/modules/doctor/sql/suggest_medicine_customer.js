@@ -29,7 +29,7 @@ const hashHelper = require("./../helper/hashHelper");
 
       return (response = {
         status: httpStatus.OK,
-        message: " Doctor Registered successfully!",
+        message: " Medicine Suggested Successfully!",
       });
     } catch (error) {
       console.error(error);
